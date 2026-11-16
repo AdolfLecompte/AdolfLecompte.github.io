@@ -1,0 +1,20 @@
+import { SupportGrid } from "../../components/SupportGrid";
+
+# Supported systems
+
+Ashen is written for Hyprland and Arch. The rest is listed so you can see what
+is missing, not because it works.
+
+<SupportGrid />
+
+## What porting needs
+
+- **Another compositor:** the shell talks to Hyprland for workspaces, windows
+  and events, and the configuration is Hyprland Lua. Quickshell itself runs on
+  other compositors, so the work is replacing that service layer.
+- **Another distribution:** the installer and the package are written for
+  pacman. Another package manager needs its own package list and installer
+  steps.
+
+Want to help? Open an issue on
+[GitHub](https://github.com/AdolfLecompte/ashen).

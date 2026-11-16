@@ -1,0 +1,64 @@
+# Update
+
+`ashen update` -- or Update in Settings > About, which runs the same thing.
+It pulls the new release and then runs the installer, so the packages a new
+version needs arrive with it. Re-running the install line does the same. A
+`git pull` alone brings new configs without their packages, which is a shell
+that half-starts.
+
+**Coming from 3.5.0 or older, update once by hand.** In those versions the
+Update button reruns the installer without pulling, so it reinstalls the
+version you already have and keeps offering the update. Run this once and the
+button works from then on:
+
+```sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/AdolfLecompte/ashen/main/install/boot.sh)"
+```
+
+Those versions also relaunch a dead `powerprofilesctl monitor` several times a
+second, which keeps the CPU busy at idle; updating fixes that too.
+
+The `ashen` command also does the rest from a terminal (`ashen help`):
+
+| Command | What it does |
+|---|---|
+| `ashen update` / `ashen check` | update, or only ask whether there is a newer release |
+| `ashen version` | installed version, latest release, current commit |
+| `ashen restart` | restart the shell cleanly, duplicates included |
+| `ashen doctor` | missing programs, a stuck or doubled shell, the probes |
+| `ashen logs` | the shell's log, live |
+| `ashen wallpaper <file\|next\|prev\|random>` | change the wallpaper |
+| `ashen bar …` / `ashen ipc …` | anything the shell answers over IPC |
+
+One thing the installer cannot do for you: if you use one of the **fixed colour
+schemes** instead of Dynamic, pick it again in Settings > Look after updating.
+That palette is written by the shell itself, so a script cannot regenerate it.
+
+**A checkout with local changes is not updated.** `ashen update` stops and
+says so rather than overwrite your edits; `git -C ~/ashen status` shows what
+is in the way. Commit or stash it, then run the update again.
+
+## Your own changes
+
+Keep them out of `~/ashen`, and updates never meet them. Everything Ashen
+writes for this machine already lives in `~/.config/ashen/`:
+
+| File | What it holds |
+|---|---|
+| `prefs.json` | every setting from Settings |
+| `hypr/layout.lua` | your keyboard layouts (Settings > Input, the installer) |
+| `hypr/border.lua` | the window border colour (the theme) |
+| `hypr/user.lua` | **yours**: any Hyprland config, loaded last so it wins |
+| `hooks/<event>` | your commands on the shell's events (see Hooks) |
+
+`hypr/user.lua` takes the same Lua as `~/.config/hypr/conf/*.lua`:
+
+```lua
+hl.config({ general = { gaps_out = 12 } })
+hl.bind("SUPER + B", hl.dsp.exec_cmd("firefox"))
+```
+
+**Coming from 3.6.0 or older**, the layout and border were written into
+`conf/input.lua` and `conf/general.lua` inside the checkout. Once the new
+files exist (change the layout or the wallpaper once), put those two back:
+`git -C ~/ashen checkout -- hypr/.config/hypr/conf/input.lua hypr/.config/hypr/conf/general.lua`.

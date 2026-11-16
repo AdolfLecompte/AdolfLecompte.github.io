@@ -1,0 +1,142 @@
+import { InstallLine } from "../../components/InstallLine";
+
+# Installation
+
+Ashen installs on **Arch Linux and Arch-based distributions** and runs on **Hyprland**.
+Nothing else is supported yet (see [Supported systems](/docs/supported/)).
+
+<InstallLine />
+
+That line is the whole thing. What it does, in order:
+
+1. **Checks this is Arch.** No pacman, no install — it says so and stops.
+2. **Fetches the repo into `~/ashen`.** The directory is not yours to choose: the
+   shell's Lua and `services/Paths.qml` look there by name.
+3. **Hands over to `install/run.sh`**, which is what actually installs. Everything
+   below is that script.
+
+## What the installer does
+
+First it asks three things, with the arrow keys: the **language** of the shell
+(English, Español, Deutsch, Русский), the **keyboard layout** and the **system
+language**. The layout goes to Hyprland and to the login screen, so the
+password is typed on it too; more can be added later in Settings. The system
+language is generated with `locale-gen` and set with `localectl`, and keeping
+the current one is the default.
+
+Then it draws five steps and rewrites them in place as it goes:
+
+```
+  ✓ packages      ██████████████████  62/62
+  ▸ dotfiles      35 files linked
+  · login screen
+  · services
+  · folders
+```
+
+- **Sudo is asked once**, at the start, and kept alive in the background, so
+  the rest runs unattended.
+- **The system is brought up to date first** (`pacman -Syu`). Installing
+  against a stale package database is how a fresh machine hits 404s, and a
+  refresh without the upgrade is a partial upgrade, which Arch does not support.
+- **Packages, one transaction each.** `pacman -S a b c` is atomic: one bad name
+  and none of the rest install. That is how a fresh machine came up
+  with no Nerd Font and nothing said about it. Here a package that fails is
+  printed above the steps — so it survives the redraw — and named again at the
+  end with the command to retry it. A step that went wrong ends on a ✗, not a
+  tick, and `Ctrl-C` stops the install and gives the terminal back.
+- **PulseAudio is swapped for PipeWire.** `pipewire-pulse` conflicts with
+  `pulseaudio`, so a machine still running the old daemon has it removed
+  first (`libpulse`, the client library, stays). An AUR build that provides
+  `qt6ct` (`qt6ct-kde`) is replaced by the repo's `qt6ct`, which is rebuilt
+  with every Qt upgrade instead of breaking on it.
+- **An AUR helper if there is none.** `yay` is built from the AUR when the
+  machine has neither `paru` nor `yay` (vanilla Arch and Manjaro ship none), and
+  anything the official repos could not give is asked of the AUR before it
+  counts as a failure.
+- **Dotfiles**, by symlink from the checkout, so editing `~/.config/hypr/…` edits
+  the repo and there is no second copy to keep in sync. A real file already
+  sitting where a config belongs (`~/.zshrc` is the usual one) is moved to
+  `<name>.bak`, never overwritten. The three answers are applied here too: the
+  shell's language, the layout in `~/.config/ashen/hypr/layout.lua` and `localectl`, and the locale.
+- **The login screen**, if `sddm` is installed. It is never switched blind: the
+  theme has to declare `QtVersion=6`, the Qt6 greeter has to exist **and resolve
+  its libraries**, and only then is `/etc/sddm.conf` repointed — with a backup,
+  and with the command to undo it printed at the end.
+- **Services** (`NetworkManager`, `bluetooth`, `power-profiles-daemon`), the
+  `video` group, and the XDG folders the scripts expect by their English names.
+
+Installed from scratch, with no failures, on **Arch, Manjaro, CachyOS,
+EndeavourOS and Garuda**. Distributions without systemd (Artix) are not
+supported yet: the services step uses `systemctl`.
+
+It ends with a count (installed · already there · failed), the command to
+retry whatever failed, the path of the full log (`~/.cache/ashen-install.log`),
+and asks you to **reboot** — this changed the login screen, enabled system
+services and added you to a group, and a logout shows none of that. The
+welcome card comes up by itself the first time the shell starts.
+
+Running it again asks the same three questions with your last answers already
+chosen, and installs only what is missing.
+
+## Flags
+
+| Flag | Effect |
+|---|---|
+| `--dry-run` | says everything, touches nothing — not even its own log |
+| `ASHEN_LANG=es` | skips the language question (`en` `es` `de` `ru`) |
+| `ASHEN_KB=latam` | skips the keyboard question (any XKB layout code) |
+| `ASHEN_LOCALE=es_MX` | skips the system language question (any glibc locale) |
+| `ASHEN_LOG=<file>` | writes the install log somewhere else |
+| `ASHEN_SOURCE=<url>` | `boot.sh` clones from this instead (a fork) |
+
+Without a terminal (piped, or in a script) nothing is asked: the answers come
+from these variables or from what the machine already uses.
+
+## From the AUR
+
+```bash
+paru -S ashen-git     # or yay
+ashen-setup           # copies the dotfiles into your home
+```
+
+The package puts the shell in `/etc/xdg/quickshell/ashen` and the commands in
+`/usr/bin`; it may not write to a home, so `ashen-setup` copies Hyprland's,
+kitty's, zsh's and the rest of the configs there (an existing file goes to
+`<name>.bak`; `--dry-run` says what it would do). The package does not ask
+the installer's questions, enable services or switch the login screen:
+enable `NetworkManager`, `bluetooth` and `power-profiles-daemon` yourself.
+
+## By hand
+
+```bash
+git clone https://github.com/AdolfLecompte/ashen.git ~/ashen
+bash ~/ashen/install/run.sh
+```
+
+Same script, same result — `boot.sh` only does the two things above it.
+
+**Clone to `~/ashen` and nowhere else.** The shell's Lua and its scripts call
+each other by absolute path (`$HOME/ashen/scripts/…`), so the name is part of the
+contract, not a preference.
+
+Only the dotfiles, without the packages — the same symlinks the installer
+makes (without `--link` it copies instead):
+
+```bash
+ASHEN_CONFIG_SRC=~/ashen ~/ashen/scripts/ashen-setup --link
+```
+
+Only the config packages are touched: `docs/`, `scripts/` and the rest
+of the repo stay where they are. Then set Zsh as your shell
+(`chsh -s $(which zsh)`), enable `NetworkManager`, `bluetooth` and
+`power-profiles-daemon`, and start Hyprland from your display manager or a TTY.
+
+> **The configs are symlinks into the checkout.** Editing `~/.config/hypr/…` or
+> `~/.config/quickshell/ashen/…` edits the repo — there is no second copy to keep
+> in sync, and no step that copies one over the other.
+
+> **XDG folders are read by their English names.** If your locale made
+> `~/Imágenes` instead of `~/Pictures`, make the English ones too: the scripts
+> look for `~/Pictures/Wallpapers`, `~/Pictures/Screenshots` and `~/Videos`
+> literally. The installer creates them for you.

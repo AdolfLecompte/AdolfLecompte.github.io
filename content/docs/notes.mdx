@@ -1,0 +1,22 @@
+# Notes
+
+- The Hyprland config is **Lua** (`hyprland.lua` + `conf/*.lua`), not `hyprland.conf`.
+  `hyprctl keyword` does **not** work against it — use `hyprctl eval '<lua>'` to try
+  things at runtime.
+- Shell IPC: `qs -c ashen ipc show` lists every callable target, and
+  `ashen ipc <target> <function>` calls one.
+- Restart the shell with `ashen restart`; `ashen doctor` says what is wrong
+  when it misbehaves.
+- Window opacity: a `windowrule` opacity value is **multiplied** by
+  `active_opacity`/`inactive_opacity` unless you append `override`. That is why the
+  browser rule reads `opacity 0.85 override 0.80 override`.
+
+## Getting your bearings
+
+The first time the shell runs it opens a welcome card with the keys that matter.
+It comes back with `ashen-welcome`, and `ashen-welcome notes` shows what changed
+in the version you are running — the same notes as `CHANGELOG.md`, because it
+reads that file (or its translation, when there is one for your language).
+
+`ashen-widgets` does the same job for the desktop: `ashen-widgets` toggles the
+editor, `ashen-widgets list` says what is out there and where.

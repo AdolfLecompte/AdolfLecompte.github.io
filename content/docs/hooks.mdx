@@ -1,0 +1,21 @@
+# Hooks
+
+An executable at `~/.config/ashen/hooks/<event>` runs when that event happens,
+with its details as arguments. No file, nothing runs.
+
+| Event | When | Arguments |
+|---|---|---|
+| `startup` | the shell has started | |
+| `wallpaper` | the wallpaper changed | its path |
+| `lock` / `unlock` | the session was locked / unlocked | |
+| `theme` | light or dark mode was switched | `light` or `dark` |
+| `power` | the charger was plugged / unplugged | `ac` or `battery` |
+| `battery-low` | the low-battery warning | the level |
+| `usb` | a drive came or went | `added` / `removed`, its name |
+| `game` | game mode | `on` or `off` |
+
+```sh
+mkdir -p ~/.config/ashen/hooks
+printf '#!/bin/sh\nnotify-send "wallpaper" "$1"\n' > ~/.config/ashen/hooks/wallpaper
+chmod +x ~/.config/ashen/hooks/wallpaper
+```

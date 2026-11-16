@@ -1,0 +1,67 @@
+# What's in it
+
+A Quickshell shell (`quickshell/`) providing the bar, the panels and the lock
+screen, driven by a Hyprland config written in **Lua** (`hypr/`).
+
+- **Bar** — launcher, notifications, workspaces (incl. special workspaces), media,
+  clock, tray, USB, screen recording, active window, keyboard layout, network,
+  bluetooth, sound, battery, CPU and memory, screen time, timer, microphone,
+  clipboard, screenshot, power. The bar goes on any of the four edges, and every capsule
+  can be dragged to either end or its centre; each one chooses how much it
+  says — `full`, `compact` or `icon`, offered only where they differ. Four
+  shapes for the bar itself — pills, island, solid, and docked (flush with
+  the whole edge) — and five
+  styles for the workspaces: icons, numbers, dots, Pac-Man or kanji, each with
+  an optional tick per window. Special workspaces keep their own icon in all
+  of them.
+- **Look** — every surface solid or glass (*Blur*: the terminal's own
+  translucency, with Hyprland's blur behind), and one outline switch for the
+  whole shell or part by part.
+- **Dock** — pinned and open applications on an edge of your choosing. A click
+  launches, focuses, or hides to a special workspace, in that order; a
+  right-click pins or unpins, and Settings has the list with a search. It
+  can also carry bar pills as icons (sound, battery, clock…) and shortcuts:
+  shell actions like lock or game mode, or a command of your own.
+- **Panels** — every pill opens a panel that grows out of it and leaves the same
+  way, or opens like a window from the bar's edge. They share one language —
+  tinted plates, one radius, one type scale — and never stick out past the bar.
+- **Lock screen** — its own `WlSessionLock` surface: padlock, fade or no intro,
+  PAM auth, blurred wallpaper, and the desktop's own widgets in three columns
+  — music with its sung line, notifications, the machine with its battery
+  time on hover — plus a switch in its power menu to show the password as you
+  type it.
+- **Login screen** — an SDDM theme: one column on the left with the time, one
+  plate holding your face, name and password, the three ways out and the
+  session, over drawn mountains and spruce groves. One of five palettes
+  (`preset=` in its `theme.conf`: dusk, forest, midnight, amber, ash). It
+  carries no name, so it suits any desktop.
+- **Desktop widgets** — clock, weather, calendar, sun, media, lyrics,
+  visualiser, timer, notifications, updates, battery, machine, disks, screen time and
+  pictures. Arrange them with `SUPER + SHIFT + D` and drag a widget by any part
+  of it; right-click one for its shapes, sizes, the other screen, or to remove
+  it.
+- **Two screens** — arrange them on a grid, mirror one, or let workspaces spread
+  over them (1-5 / 6-10, or evens on one and odds on the other); each bar shows
+  its own. Widgets and wallpapers live on a screen of their own, and the whole
+  arrangement comes back when a screen is plugged in again.
+- **Screen time** — how long each application had you today and across the
+  week, counted only while you are at the machine. A panel, an optional pill and
+  a desktop widget with each app's own icon; the numbers never leave
+  `~/.config/ashen`.
+- **Timer** — stopwatch, countdown and a pomodoro (25 min focus, 5 break, a
+  long one every fourth) in one panel, from its pill or `SUPER + SHIFT + T`.
+  While something runs, a card heads the notifications with its controls; its
+  end is a notification of its own.
+- **Game mode** — one key flattens the compositor (no animations, blur, shadows,
+  rounding or gaps) and quiets the shell, then puts everything back exactly as it
+  was, your screen layout included.
+- **Wallpapers** — a picker you can search, video or still, and a different
+  wallpaper on each screen when more than one is plugged in.
+- **Process monitor** — CPU, GPU and traffic drawn as the last minute of samples,
+  memory, drives and temperatures as levels.
+- **Launcher, clipboard, and Settings with a search** that takes you to the row.
+- **Four languages** — English, Spanish, Russian and German, switched on the spot.
+  The shortcut list, the welcome and the release notes follow it too; the notes
+  are read from `i18n/changelog.<lang>.md` and fall back to English.
+- **Dynamic theming** — the wallpaper picker runs `matugen` over the image you
+  choose and the whole shell re-colours from `~/.cache/ashen_scheme.json`.

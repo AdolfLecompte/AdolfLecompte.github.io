@@ -1,0 +1,42 @@
+# Usage
+
+| Keys | Action |
+|---|---|
+| `SUPER` (tap) | launcher |
+| `SUPER + SHIFT + W` | wallpaper picker (drives dynamic theming) |
+| `SUPER + I` | settings |
+| `SUPER + T / E / W / C` | terminal, files, browser, editor |
+| `SUPER + Q` | close the window |
+| `SUPER + F` / `SUPER + SHIFT + F` | fullscreen / float |
+| `SUPER + N` | notifications |
+| `SUPER + SHIFT + V` | clipboard |
+| `SUPER + SHIFT + S` | screenshot |
+| `SUPER + SHIFT + R` | start / stop screen recording |
+| `SUPER + SHIFT + G` | game mode |
+| `SUPER + SHIFT + P` | process monitor |
+| `SUPER + SHIFT + U` | screen time |
+| `SUPER + SHIFT + T` | timer: stopwatch, countdown, pomodoro |
+| `SUPER + SHIFT + D` | arrange desktop widgets |
+| `ALT + Tab` | window switcher |
+| `SUPER + L` | lock |
+| `SUPER + Escape` | power menu |
+| `SUPER + 1…0` / `SUPER + ALT + 1…0` | go to / send the window to a workspace |
+| `SUPER + M / D / O / X / S` | show or hide the music, discord, notes, fav and scratchpad special workspaces |
+| `SUPER + ALT + M / D / O / X / S` | send the focused window to that special workspace |
+| `SUPER + SHIFT + arrows` | move the window (in and out of tab groups) |
+| `SUPER + J` / `SUPER + K` | flip / swap the split |
+| `SUPER + R` | window size: 1/3, 1/2, 2/3 |
+| `SUPER + CTRL + P` | pin the window on every workspace |
+| `SUPER + SHIFT + L` | this workspace: tiles or columns |
+| `SUPER + G` / `SUPER + Tab` | group as tabs / next tab |
+
+Every one of these can be changed from **Settings → Input**.
+
+On a touchpad, three fingers sideways change workspace, up opens the launcher
+and down shows the scratchpad; four fingers move the window. They live in
+`hypr/.config/hypr/conf/gestures.lua`, and Settings → Input lists them.
+
+The keyboard layout pill in the bar is **read-only**. Layouts are kept in
+`~/.config/ashen/hypr/layout.lua` (what the installer was told, `us` if
+nothing) and switched from **Settings → Input**. Every keyboard follows the pick,
+including one that is plugged in or wakes up later.
