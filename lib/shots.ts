@@ -24,6 +24,7 @@ export const shots: Shot[] = [
   { src: "/shots/18.webp", accent: "#ffb4ab", alt: "The lock screen at rest: the time and nothing else" },
   { src: "/shots/19.webp", accent: "#ffb4ab", alt: "The lock screen once asked: the face, the name and the password on one plate between the widgets" },
   { src: "/shots/20.webp", accent: "#ffb4ab", alt: "The screen-time panel: today's total, the apps, the week and the month" },
+  { src: "/shots/21.webp", accent: "#ffb4ab", alt: "The clock panel: the hour with the sun's arch over it, the weekday and the day's ticks, beside the calendar and the weather" },
 ];
 
 export const accentOf = (src: string) => shots.find((s) => s.src === src)?.accent;
